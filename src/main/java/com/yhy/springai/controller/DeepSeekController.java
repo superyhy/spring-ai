@@ -1,5 +1,6 @@
 package com.yhy.springai.controller;
 
+import com.yhy.springai.service.DeepSeekChatService;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/deep_seek")
 public class DeepSeekController {
     @Autowired
-    OpenAiChatModel openAiChatModel;
+    private DeepSeekChatService deepSeekChatService;
 
+    /**
+     * 单轮对话
+     *
+     * @param message
+     * @return
+     */
     @GetMapping("/chat")
     public String ask(@RequestParam String message) {
-        return openAiChatModel.call(message);
+        return deepSeekChatService.singleChat(message);
     }
 
 }

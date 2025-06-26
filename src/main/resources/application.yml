@@ -10,5 +10,5 @@ spring:
       base-url: https://dashscope.aliyuncs.com/compatible-mode
       chat:
         options:
-          model: deepseek-r1-distill-qwen-1.5b
+          model: deepseek-r1-distill-llama-70b
           temperature: 0.8
