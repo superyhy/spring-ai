@@ -1,0 +1,14 @@
+server:
+  port: 8093
+
+spring:
+  application:
+    name: spring-ai
+  ai:
+    openai:
+      api-key: sk-b5dbf86e9bc24ad0a9f61171f9e66e10
+      base-url: https://dashscope.aliyuncs.com/compatible-mode
+      chat:
+        options:
+          model: deepseek-r1-distill-qwen-1.5b
+          temperature: 0.8
