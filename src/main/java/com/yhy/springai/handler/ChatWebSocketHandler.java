@@ -21,6 +21,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 多轮对话
+ *
  * @Author Yhy
  * @create 2025/6/26 11:29
  * @describe

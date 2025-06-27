@@ -45,6 +45,16 @@ public class DeepSeekChatService {
      * 构建多轮消息调用（含 system prompt）
      */
     public String multipleChatWithPrompt(List<MessageDTO> history, String userInput) {
+        // 调用模型
+        return multipleChat(getMultipleMessages(history, userInput));
+    }
+
+    /**
+     * 构造对话列表
+     *
+     * @return
+     */
+    public List<Message> getMultipleMessages(List<MessageDTO> history, String userInput) {
         List<Message> messages = new ArrayList<>();
 
         // 可选：添加角色提示
@@ -59,8 +69,7 @@ public class DeepSeekChatService {
         // 添加当前提问
         messages.add(new UserMessage(userInput));
 
-        // 调用模型
-        return multipleChat(messages);
+        return messages;
     }
 
 }
