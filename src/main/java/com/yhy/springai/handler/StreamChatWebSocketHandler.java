@@ -64,32 +64,36 @@ public class StreamChatWebSocketHandler extends TextWebSocketHandler {
         // 调用 Spring AI 流式接口，多轮对话
         openAiChatModel.stream(deepSeekChatService.getMultipleMessages(history, userInput).toArray(new Message[0]))
                 .subscribe(response -> {
-                    try {
-                        String reply = new String(response.getBytes(), StandardCharsets.UTF_8);
-                        aiReplyBuilder.append(reply);
-                        segmentBuffer.append(reply);
-                        //分段发送消息
-                        if (shouldFlush(segmentBuffer, MAX_CHAR)) {
-                            session.sendMessage(new TextMessage(segmentBuffer.toString()));
-                            segmentBuffer.setLength(0);
-                        }
-                    } catch (Exception e) {
-                        log.error("发送流式消息失败", e);
-                    }
-                }, error -> {
-                    try {
-                        session.sendMessage(new TextMessage("发送AI响应消息失败"));
-                    } catch (IOException e) {
-                        log.error("发送失败消息异常", e);
-                    }
-                }, () -> {
-                    synchronized (history) {
-                        history.add(new MessageDTO(userInput, aiReplyBuilder.toString()));
-                        while (history.size() > MAX_HISTORY_SIZE) {
-                            history.remove(0);
-                        }
-                    }
-                });
+                            try {
+                                String reply = new String(response.getBytes(), StandardCharsets.UTF_8);
+                                aiReplyBuilder.append(reply);
+                                segmentBuffer.append(reply);
+                                //分段发送消息
+                                if (shouldFlush(segmentBuffer, MAX_CHAR)) {
+                                    session.sendMessage(new TextMessage(segmentBuffer.toString()));
+                                    segmentBuffer.setLength(0);
+                                }
+                            } catch (Exception e) {
+                                log.error("发送流式消息失败", e);
+                            }
+                        },
+                        //异常处理
+                        error -> {
+                            try {
+                                session.sendMessage(new TextMessage("发送AI响应消息失败"));
+                            } catch (IOException e) {
+                                log.error("发送失败消息异常", e);
+                            }
+                        },
+                        //最终结果处理
+                        () -> {
+                            synchronized (history) {
+                                history.add(new MessageDTO(userInput, aiReplyBuilder.toString()));
+                                while (history.size() > MAX_HISTORY_SIZE) {
+                                    history.remove(0);
+                                }
+                            }
+                        });
     }
 
     @Override
